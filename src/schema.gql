@@ -1,0 +1,16 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  helloWord: String!
+
+  """va a regresar un numero random"""
+  randomNumber: Float!
+
+  """va a regresar un numero del o al 10, excluyendo al 10"""
+  randomFrom0To: Int!
+
+  """va a regresar el doble de un numero, (default) 6"""
+  doble(number: Int): Int!
+}
