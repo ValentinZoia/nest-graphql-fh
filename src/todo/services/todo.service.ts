@@ -1,12 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Todo } from '../entities/todo.entity';
 import { CreateTodoInput, UpdateTodoInput } from '../dtos/inputs/todo.input';
+import { StatusArgs } from '../dtos/args/status.args';
 
 @Injectable()
 export class TodoService {
   private todos: Todo[] = [];
 
-  public getAllTodos(): Todo[] {
+  get totalTodos() {
+    return this.todos.length;
+  }
+
+  get pendingTodos() {
+    return this.todos.filter((task) => !task.completed).length;
+  }
+
+  get completedTodos() {
+    return this.todos.filter((task) => task.completed).length;
+  }
+
+  public getAllTodos(statusArgs: StatusArgs): Todo[] {
+    const { status } = statusArgs;
+    if (status !== undefined)
+      return this.todos.filter((task) => task.completed === status);
+
     return this.findAll();
   }
   public getTodoById(id: string): Todo | NotFoundException {
@@ -25,7 +42,6 @@ export class TodoService {
   }
 
   public updateTodo(id: string, updateTodoDto: UpdateTodoInput): Todo {
-    console.log(updateTodoDto);
     const updatedTodo = this.update(id, updateTodoDto);
     return updatedTodo;
   }
@@ -46,6 +62,8 @@ export class TodoService {
 
     return `Tarea con id : ${id} eliminada exitosamente`;
   }
+
+  //Agregations
 
   private findOne(id: string): Todo {
     return this.todos.find((task) => task.id === id) as Todo;
